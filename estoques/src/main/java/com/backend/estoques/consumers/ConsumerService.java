@@ -1,4 +1,4 @@
-package com.backend.estoques.consumer;
+package com.backend.estoques.consumers;
 
 import com.backend.estoques.dtos.VerificarEstoqueConsumerDTO;
 import com.backend.estoques.services.ProdutoService;
@@ -16,12 +16,12 @@ public class ConsumerService {
         this.produtoService = produtoService;
     }
 
-    @RabbitListener(queues = "${rabbitmq.queue.producer.estoque-produtos}")
+    @RabbitListener(queues = "${rabbitmq.queue.consumer.estoque-produtos}")
     public void receberBuscarProdutos(@Payload String payload) {
         produtoService.enviarProdutos();
     }
 
-    @RabbitListener(queues = "${rabbitmq.queue.producer.verificar-estoque}")
+    @RabbitListener(queues = "${rabbitmq.queue.consumer.verificar-estoque}")
     public void verificarEstoque(@Payload String payload) {
         VerificarEstoqueConsumerDTO verificarEstoqueConsumer = objectMapper.readValue(payload, VerificarEstoqueConsumerDTO.class);
         produtoService.verificarSePossuiEstoque(verificarEstoqueConsumer);

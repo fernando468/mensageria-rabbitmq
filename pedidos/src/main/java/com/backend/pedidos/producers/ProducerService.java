@@ -1,4 +1,4 @@
-package com.backend.pedidos.producer;
+package com.backend.pedidos.producers;
 
 import com.backend.pedidos.dtos.BuscarEstoqueProducerDTO;
 import com.backend.pedidos.dtos.VerificarEstoqueProducerDTO;

@@ -2,7 +2,7 @@ package com.backend.estoques.services;
 
 import com.backend.estoques.dtos.*;
 import com.backend.estoques.models.Produto;
-import com.backend.estoques.producer.ProducerService;
+import com.backend.estoques.producers.ProducerService;
 import com.backend.estoques.repositories.ProdutoRepository;
 import org.springframework.stereotype.Service;
 

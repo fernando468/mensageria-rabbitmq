@@ -1,4 +1,4 @@
-package com.backend.pedidos.consumer;
+package com.backend.pedidos.consumers;
 
 import com.backend.pedidos.dtos.ProdutoConsumerDTO;
 import com.backend.pedidos.dtos.VerificarEstoqueConsumerDTO;

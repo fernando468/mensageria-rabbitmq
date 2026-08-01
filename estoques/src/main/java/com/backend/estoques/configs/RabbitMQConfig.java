@@ -14,17 +14,17 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
-    @Value("${rabbitmq.queue.producer.verificar-estoque}")
-    private String filaProducerVerificarEstoque;
+    @Value("${rabbitmq.queue.consumer.verificar-estoque}")
+    private String filaConsumerVerificarEstoque;
 
-    @Value("${rabbitmq.queue.consumer.estoque-estoque-verificado}")
+    @Value("${rabbitmq.queue.producer.estoque-estoque-verificado}")
     private String filaProducerEstoqueVerificado;
 
-    @Value("${rabbitmq.queue.producer.estoque-produtos}")
-    private String filaProducerEstoqueProdutos;
+    @Value("${rabbitmq.queue.consumer.estoque-produtos}")
+    private String filaConsumerEstoqueProdutos;
 
-    @Value("${rabbitmq.queue.consumer.estoque-produtos-lista}")
-    private String filaConsumerEstoqueProdutosLista;
+    @Value("${rabbitmq.queue.producer.estoque-produtos-lista}")
+    private String filaProducerEstoqueProdutosLista;
 
     @Value("${rabbitmq.queue.exchange-pedidos}")
     private String exchangeDirectPedido;
@@ -43,7 +43,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue pedidoQueue() {
-        return new Queue(filaProducerVerificarEstoque, true);
+        return new Queue(filaConsumerVerificarEstoque, true);
     }
 
     @Bean
@@ -53,12 +53,12 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue estoqueProdutosQueue() {
-        return new Queue(filaProducerEstoqueProdutos, true );
+        return new Queue(filaConsumerEstoqueProdutos, true );
     }
 
     @Bean
     public Queue estoqueProdutosListaQueue() {
-        return new Queue(filaConsumerEstoqueProdutosLista, true );
+        return new Queue(filaProducerEstoqueProdutosLista, true );
     }
 
     @Bean
@@ -66,7 +66,7 @@ public class RabbitMQConfig {
         return BindingBuilder
                 .bind(pedidoQueue())
                 .to(exchange())
-                .with(filaProducerVerificarEstoque);
+                .with(filaConsumerVerificarEstoque);
     }
 
     @Bean
@@ -82,7 +82,7 @@ public class RabbitMQConfig {
         return BindingBuilder
                 .bind(estoqueProdutosQueue())
                 .to(exchange())
-                .with(filaProducerEstoqueProdutos);
+                .with(filaConsumerEstoqueProdutos);
     }
 
     @Bean
@@ -90,7 +90,7 @@ public class RabbitMQConfig {
         return BindingBuilder
                 .bind(estoqueProdutosListaQueue())
                 .to(exchange())
-                .with(filaProducerEstoqueProdutos);
+                .with(filaConsumerEstoqueProdutos);
     }
 
     @Bean

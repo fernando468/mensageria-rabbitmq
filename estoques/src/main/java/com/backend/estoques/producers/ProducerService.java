@@ -1,4 +1,4 @@
-package com.backend.estoques.producer;
+package com.backend.estoques.producers;
 
 import com.backend.estoques.dtos.ProdutoProducerDTO;
 import com.backend.estoques.dtos.VerificarProdutoProducerDTO;

@@ -5,14 +5,13 @@ import com.backend.pedidos.enums.StatusPedidoEnum;
 import com.backend.pedidos.models.Pedido;
 import com.backend.pedidos.models.PedidoItem;
 import com.backend.pedidos.models.Produto;
-import com.backend.pedidos.producer.ProducerService;
+import com.backend.pedidos.producers.ProducerService;
 import com.backend.pedidos.repositories.PedidoRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PedidoService {
