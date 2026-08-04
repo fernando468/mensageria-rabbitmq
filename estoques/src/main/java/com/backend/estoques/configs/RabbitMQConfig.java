@@ -1,9 +1,6 @@
 package com.backend.estoques.configs;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,14 +14,8 @@ public class RabbitMQConfig {
     @Value("${rabbitmq.queue.consumer.verificar-estoque}")
     private String filaConsumerVerificarEstoque;
 
-    @Value("${rabbitmq.queue.producer.estoque-estoque-verificado}")
-    private String filaProducerEstoqueVerificado;
-
     @Value("${rabbitmq.queue.consumer.estoque-produtos}")
     private String filaConsumerEstoqueProdutos;
-
-    @Value("${rabbitmq.queue.producer.estoque-produtos-lista}")
-    private String filaProducerEstoqueProdutosLista;
 
     @Value("${rabbitmq.queue.exchange-pedidos}")
     private String exchangeDirectPedido;
@@ -43,22 +34,34 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue pedidoQueue() {
-        return new Queue(filaConsumerVerificarEstoque, true);
+        return QueueBuilder
+                .durable(filaConsumerVerificarEstoque)
+                .deadLetterExchange(exchangeDirectPedido)
+                .deadLetterRoutingKey(filaConsumerVerificarEstoque + "-dead-letter")
+                .build();
     }
 
     @Bean
-    public Queue estoqueVerificadoQueue() {
-        return new Queue(filaProducerEstoqueVerificado, true );
+    public Queue pedidoDlqQueue() {
+        return QueueBuilder
+                .durable(filaConsumerVerificarEstoque + "-dead-letter")
+                .build();
     }
 
     @Bean
     public Queue estoqueProdutosQueue() {
-        return new Queue(filaConsumerEstoqueProdutos, true );
+        return QueueBuilder
+                .durable(filaConsumerEstoqueProdutos)
+                .deadLetterExchange(exchangeDirectPedido)
+                .deadLetterRoutingKey(filaConsumerEstoqueProdutos + "-dead-letter")
+                .build();
     }
 
     @Bean
-    public Queue estoqueProdutosListaQueue() {
-        return new Queue(filaProducerEstoqueProdutosLista, true );
+    public Queue estoqueProdutosDlqQueue() {
+        return QueueBuilder
+                .durable(filaConsumerEstoqueProdutos + "-dead-letter")
+                .build();
     }
 
     @Bean
@@ -70,25 +73,25 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding estoqueVerificado() {
+    public Binding verificarEstoqueDlqBinding() {
         return BindingBuilder
-                .bind(estoqueVerificadoQueue())
+                .bind(pedidoDlqQueue())
                 .to(exchange())
-                .with(filaProducerEstoqueVerificado);
+                .with(filaConsumerVerificarEstoque + "-dead-letter");
     }
 
     @Bean
-    public Binding estoqueProdutos() {
+    public Binding estoqueProdutosDlqBinding() {
+        return BindingBuilder
+                .bind(estoqueProdutosDlqQueue())
+                .to(exchange())
+                .with(filaConsumerVerificarEstoque + "-dead-letter");
+    }
+
+    @Bean
+    public Binding estoqueProdutosBinding() {
         return BindingBuilder
                 .bind(estoqueProdutosQueue())
-                .to(exchange())
-                .with(filaConsumerEstoqueProdutos);
-    }
-
-    @Bean
-    public Binding estoqueProdutosLista() {
-        return BindingBuilder
-                .bind(estoqueProdutosListaQueue())
                 .to(exchange())
                 .with(filaConsumerEstoqueProdutos);
     }

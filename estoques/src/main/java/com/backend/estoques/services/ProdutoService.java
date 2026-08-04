@@ -51,7 +51,6 @@ public class ProdutoService {
             if (produto.getQuantidadeEmEstoque() <= 0 || pedidoItemConsumerDTO.quantidade() > produto.getQuantidadeEmEstoque()) {
                 possuiAlgumItemSemEstoque = true;
                 listaPedidoItem.add(new PedidoItemProducerDTO(pedidoItemConsumerDTO.idProduto(), produto.getQuantidadeEmEstoque()));
-                break;
             }
 
             produto.setQuantidadeEmEstoque(produto.getQuantidadeEmEstoque() - pedidoItemConsumerDTO.quantidade());
